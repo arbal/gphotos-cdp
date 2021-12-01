@@ -1,8 +1,9 @@
-module github.com/perkeep/gphotos-cdp
+module github.com/arbal/gphotos-cdp
 
 go 1.12
 
 require (
-	github.com/chromedp/cdproto v0.0.0-20200608134039-8a80cdaf865c
-	github.com/chromedp/chromedp v0.5.4-0.20200624114048-353306f986a8
+	github.com/chromedp/cdproto v0.0.0-20210808225517-c36c1bd4c35e
+	github.com/chromedp/chromedp v0.7.4
+	golang.org/x/sys v0.0.0-20210809222454-d867a43fc93e // indirect
 )
