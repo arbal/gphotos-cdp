@@ -219,7 +219,7 @@ func (s *Session) login(ctx context.Context) error {
 		// authenticated.
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			tick := time.Second
-			timeout := time.Now().Add(2 * time.Minute)
+			timeout := time.Now().Add(time.Minute * 2)
 			var location string
 			for {
 				if time.Now().After(timeout) {
@@ -424,7 +424,7 @@ func navLeft(ctx context.Context) error {
 	muNavWaiting.Lock()
 	navWaiting = true
 	muNavWaiting.Unlock()
-	t := time.NewTimer(time.Minute)
+	t := time.NewTimer(time.Minute * 2)
 	select {
 	case <-navDone:
 		if !t.Stop() {
@@ -499,7 +499,7 @@ func startDownload(ctx context.Context) error {
 
 // dowload starts the download of the currently viewed item, and on successful
 // completion saves its location as the most recent item downloaded. It returns
-// with an error if the download stops making any progress for more than a minute.
+// with an error if the download stops making any progress for more than 2 minutes.
 func (s *Session) download(ctx context.Context, location string) (string, error) {
 
 	if err := startDownload(ctx); err != nil {
@@ -509,7 +509,7 @@ func (s *Session) download(ctx context.Context, location string) (string, error)
 	var filename string
 	started := false
 	var fileSize int64
-	deadline := time.Now().Add(time.Minute)
+	deadline := time.Now().Add(time.Minute * 2)
 	for {
 		time.Sleep(tick)
 		if !started && time.Now().After(deadline) {
@@ -545,13 +545,13 @@ func (s *Session) download(ctx context.Context, location string) (string, error)
 		if !started {
 			if len(fileEntries) > 0 {
 				started = true
-				deadline = time.Now().Add(time.Minute)
+				deadline = time.Now().Add(time.Minute * 2)
 			}
 		}
 		newFileSize := fileEntries[0].Size()
 		if newFileSize > fileSize {
 			// push back the timeout as long as we make progress
-			deadline = time.Now().Add(time.Minute)
+			deadline = time.Now().Add(time.Minute * 2)
 			fileSize = newFileSize
 		}
 		if !strings.HasSuffix(fileEntries[0].Name(), ".crdownload") {
