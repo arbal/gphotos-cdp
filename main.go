@@ -223,7 +223,7 @@ func (s *Session) login(ctx context.Context) error {
 			var location string
 			for {
 				if time.Now().After(timeout) {
-					return errors.New("timeout waiting for authentication")
+					return errors.New("timeout waiting for authentication (3m)")
 				}
 				if err := chromedp.Location(&location).Do(ctx); err != nil {
 					return err
@@ -431,7 +431,7 @@ func navLeft(ctx context.Context) error {
 			<-t.C
 		}
 	case <-t.C:
-		return errors.New("timeout waiting for left navigation")
+		return errors.New("timeout waiting for left navigation (3m)")
 	}
 	muNavWaiting.Lock()
 	navWaiting = false
@@ -513,10 +513,10 @@ func (s *Session) download(ctx context.Context, location string) (string, error)
 	for {
 		time.Sleep(tick)
 		if !started && time.Now().After(deadline) {
-			return "", fmt.Errorf("downloading in %q took too long to start", s.dlDir)
+			return "", fmt.Errorf("downloading in %q took too long to start (3m)", s.dlDir)
 		}
 		if started && time.Now().After(deadline) {
-			return "", fmt.Errorf("hit deadline while downloading in %q", s.dlDir)
+			return "", fmt.Errorf("hit deadline while downloading in %q (3m)", s.dlDir)
 		}
 
 		entries, err := ioutil.ReadDir(s.dlDir)
